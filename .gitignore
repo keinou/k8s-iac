@@ -1,9 +1,6 @@
-# Terraform
-.terraform*
-terraform.tfstate*
+oracle.pem
+**/.terraform
+**/*.tfvars
 
-# SSH keys
-id_rsa*
-
-# K8s
-kubeconfig
+**/*.lock.hcl
+**/*.tfstate*
