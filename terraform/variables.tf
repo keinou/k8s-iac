@@ -1,6 +1,10 @@
 locals {
   cidr_blocks            = ["10.0.0.0/24"]
-  ssh_managemnet_network = "1.1.1.1/32"
+}
+
+variable "ssh_managemnet_network" {
+  description = "Network can connect via SSH"
+  type        = string
 }
 
 variable "fingerprint" {

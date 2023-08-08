@@ -44,7 +44,10 @@ module "compute" {
   compartment_id      = module.compartment.compartment_id
   tenancy_ocid        = var.tenancy_ocid
   cluster_subnet_id   = module.network.cluster_subnet.id
+  
   permit_ssh_nsg_id   = module.network.permit_ssh.id
+  permit_kubeapi_nsg_id = module.network.permit_kubeapi.id
+  
   ssh_authorized_keys = [chomp(tls_private_key.ssh.public_key_openssh)]
 
   cidr_blocks = var.cidr_blocks

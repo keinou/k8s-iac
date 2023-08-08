@@ -68,3 +68,23 @@ resource "oci_core_network_security_group_security_rule" "permit_ssh" {
   }
   direction = "INGRESS"
 }
+
+resource "oci_core_network_security_group" "permit_kubeapi" {
+  compartment_id = var.compartment_id
+  vcn_id         = oci_core_vcn.cluster_network.id
+  display_name   = "Permit KubeAPI"
+}
+
+resource "oci_core_network_security_group_security_rule" "permit_kubeapi" {
+  network_security_group_id = oci_core_network_security_group.permit_kubeapi.id
+  protocol                  = "6" // TCP
+  source                    = "0.0.0.0/0"
+  source_type               = "CIDR_BLOCK"
+  tcp_options {
+    destination_port_range {
+      max = 6443
+      min = 6443
+    }
+  }
+  direction = "INGRESS"
+}

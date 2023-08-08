@@ -1,0 +1,11 @@
+tenancy_ocid="ocid1.tenancy."
+user_ocid="ocid1.user."
+private_key="oracle.pem"
+fingerprint="fx:"
+region="sa-vinhedo-1"
+
+compartment_name="kubernetes"
+compartment_description="desc"
+cidr_blocks=["10.0.0.0/24"]
+
+ssh_managemnet_network = "1.1.1.1/32"

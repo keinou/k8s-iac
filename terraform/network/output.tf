@@ -14,6 +14,11 @@ output "permit_ssh" {
   value       = oci_core_network_security_group.permit_ssh
 }
 
+output "permit_kubeapi" {
+  description = "NSG to permit KubeAPI"
+  value       = oci_core_network_security_group.permit_kubeapi
+}
+
 output "ad" {
   value = data.oci_identity_availability_domain.ad.name
 }

@@ -14,17 +14,13 @@ resource "oci_core_instance" "server_0" {
   create_vnic_details {
     subnet_id  = var.cluster_subnet_id
     private_ip = cidrhost(var.cidr_blocks[0], 10)
-    nsg_ids    = [var.permit_ssh_nsg_id]
+    nsg_ids    = [
+      var.permit_ssh_nsg_id,
+      var.permit_kubeapi_nsg_id
+    ]
   }
   metadata = {
     "ssh_authorized_keys" = local.ampere_instance_config.metadata.ssh_authorized_keys
-    "user_data" = base64encode(
-      templatefile("${path.module}/scripts/server.sh",
-        {
-          server_0_ip = cidrhost(var.cidr_blocks[0],10),
-          token       = random_string.cluster_token.result
-      })
-    )
   }
 }
 
@@ -44,17 +40,13 @@ resource "oci_core_instance" "server_1" {
   create_vnic_details {
     subnet_id  = var.cluster_subnet_id
     private_ip = cidrhost(var.cidr_blocks[0], 11)
-    nsg_ids    = [var.permit_ssh_nsg_id]
+    nsg_ids    = [
+      var.permit_ssh_nsg_id,
+      var.permit_kubeapi_nsg_id
+    ]
   }
   metadata = {
     "ssh_authorized_keys" = local.ampere_instance_config.metadata.ssh_authorized_keys
-    "user_data" = base64encode(
-      templatefile("${path.module}/scripts/server.sh",
-        {
-          server_0_ip = oci_core_instance.server_0.private_ip,
-          token       = random_string.cluster_token.result
-      })
-    )
   }
   depends_on = [oci_core_instance.server_0]
 }

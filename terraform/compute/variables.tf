@@ -18,6 +18,11 @@ variable "permit_ssh_nsg_id" {
   type        = string
 }
 
+variable "permit_kubeapi_nsg_id" {
+  description = "NSG to permit KubeAPI"
+  type        = string
+}
+
 variable "ssh_authorized_keys" {
   description = "List of authorized SSH keys"
   type        = list(any)
