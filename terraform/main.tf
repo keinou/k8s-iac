@@ -31,7 +31,7 @@ module "network" {
   tenancy_ocid   = var.tenancy_ocid
 
   cidr_blocks            = var.cidr_blocks
-  ssh_managemnet_network = local.ssh_managemnet_network
+  ssh_managemnet_network = var.ssh_managemnet_network
 }
 
 module "compute" {
