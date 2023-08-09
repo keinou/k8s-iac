@@ -4,3 +4,6 @@
 
 **/*.lock.hcl
 **/*.tfstate*
+
+ansible_inventory.ini
+config
