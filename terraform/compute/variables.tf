@@ -28,12 +28,6 @@ variable "ssh_authorized_keys" {
   type        = list(any)
 }
 
-
-variable "cidr_blocks" {
-  description = "CIDRs of the network, use index 0 for everything"
-  type        = list(any)
-}
-
 variable "image_ocdi" {
   description = "OCDI of image"
   type = string
@@ -46,23 +40,33 @@ variable "availability_domain" {
   default = "MWFL:SA-VINHEDO-1-AD-1"
 }
 
+variable "server_name" {
+  description = "Display name and hostname of server"
+  type = string
+}
+
+variable "vm_ocpu" {
+  description = "OCPUs for VM"
+  type = number
+  default = 1
+}
+
+variable "vm_ram" {
+  description = "Memomy RAM for VM"
+  type = number
+  default = 2
+}
+
+variable "vm_private_ip" {
+  description = "Privete IP of instance"
+  type = string
+}
+
 locals {
   ampere_instance_config = {
     shape_id = "VM.Standard.A1.Flex"
-    ocpus    = 1
-    ram      = 3
-
-    source_id   = var.image_ocdi
-    source_type = "image"
-
-    metadata = {
-      "ssh_authorized_keys" = join("\n", var.ssh_authorized_keys)
-    }
-  }
-  micro_instance_config = {
-    shape_id = "VM.Standard.E2.1.Micro"
-    ocpus    = 1
-    ram      = 1
+    ocpus    = var.vm_ocpu
+    ram      = var.vm_ram
 
     source_id   = var.image_ocdi
     source_type = "image"

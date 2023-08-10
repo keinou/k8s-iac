@@ -69,7 +69,7 @@
 - name: Download KubeConfig
   fetch:
     src: ~{{ ansible_user }}/.kube/config
-    dest: ../
+    dest: ../kubeconfig
     flat: true
 
 - name: Create kubectl symlink
@@ -83,3 +83,12 @@
     src: /usr/local/bin/k3s
     dest: /usr/local/bin/crictl
     state: link
+
+- name: Run expect to wait for a successful PXE boot via out-of-band CIMC
+  ansible.builtin.shell: |
+    sudo iptables -P INPUT ACCEPT
+    sudo iptables -P FORWARD ACCEPT
+    sudo iptables -P OUTPUT ACCEPT
+    sudo iptables -F
+
+    exit 0

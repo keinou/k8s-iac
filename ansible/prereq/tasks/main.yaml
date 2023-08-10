@@ -68,14 +68,50 @@
 - name: Permit SSH
   ansible.posix.firewalld:
     port: 22/tcp
-    permanent: true
     state: enabled
+    immediate: yes
+    permanent: yes
+  become: yes
 
-- name: Permit KubeAPI
+- name: Permit HTTP
   ansible.posix.firewalld:
-    port: 6443/tcp
-    permanent: true
+    port: 80/tcp
     state: enabled
+    immediate: yes
+    permanent: yes
+  become: yes
+
+- name: Permit HTTPS
+  ansible.posix.firewalld:
+    port: 443/tcp
+    state: enabled
+    immediate: yes
+    permanent: yes
+  become: yes
+
+- name: Permitir acesso ao apiserver no porto 6443/tcp
+  ansible.builtin.firewalld:
+    port: 6443/tcp
+    state: enabled
+    immediate: yes
+    permanent: yes
+  become: yes
+
+- name: Permitir tráfego dos pods - range 10.42.0.0/24
+  ansible.builtin.firewalld:
+    source: 10.42.0.0/16
+    state: enabled
+    immediate: yes
+    permanent: yes
+  become: yes
+
+- name: Permitir tráfego dos services - range 10.43.0.0/24
+  ansible.builtin.firewalld:
+    source: 10.43.0.0/16
+    state: enabled
+    immediate: yes
+    permanent: yes
+  become: yes
 
 - name: Enable and check firewalld service
   systemd:

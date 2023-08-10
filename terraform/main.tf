@@ -34,21 +34,48 @@ module "network" {
   ssh_managemnet_network = var.ssh_managemnet_network
 }
 
-module "compute" {
+module "master" {
   source     = "./compute"
   depends_on = [
     module.network,
     module.compartment
   ]
 
+  server_name         = "k3s_server_0"
   compartment_id      = module.compartment.compartment_id
   tenancy_ocid        = var.tenancy_ocid
   cluster_subnet_id   = module.network.cluster_subnet.id
+
+  vm_ocpu        = 1
+  vm_ram         = 3
+  vm_private_ip  = cidrhost(var.cidr_blocks[0], 10)
   
   permit_ssh_nsg_id   = module.network.permit_ssh.id
   permit_kubeapi_nsg_id = module.network.permit_kubeapi.id
   
   ssh_authorized_keys = [chomp(tls_private_key.ssh.public_key_openssh)]
 
-  cidr_blocks = var.cidr_blocks
+}
+
+module "worker1" {
+  source     = "./compute"
+  depends_on = [
+    module.network,
+    module.compartment
+  ]
+
+  server_name         = "k3s_server_1"
+  compartment_id      = module.compartment.compartment_id
+  tenancy_ocid        = var.tenancy_ocid
+  cluster_subnet_id   = module.network.cluster_subnet.id
+
+  vm_ocpu        = 1
+  vm_ram         = 3
+  vm_private_ip  = cidrhost(var.cidr_blocks[0], 11)
+  
+  permit_ssh_nsg_id   = module.network.permit_ssh.id
+  permit_kubeapi_nsg_id = module.network.permit_kubeapi.id
+  
+  ssh_authorized_keys = [chomp(tls_private_key.ssh.public_key_openssh)]
+
 }

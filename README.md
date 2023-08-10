@@ -9,6 +9,13 @@ Para utilizar este repositório, você precisará de:
 - Uma conta na Oracle Cloud Infrastructure (OCI) com permissões suficientes para criar e gerenciar recursos (você pode utilizar o [Free Tier](https://www.oracle.com/cloud/free/)).
 - Instalação local do [Terraform](https://www.terraform.io/downloads.html) (versão 1.0.0 ou superior).
 - Instalação local do [OCI CLI](https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/cliinstall.htm).
+- Instalação local do [Kubectl](https://kubernetes.io/docs/tasks/tools/).
+- Instalação local do [Helm](https://helm.sh/docs/intro/install/).
+- Instalação local do [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html).
+    - Alem do Ansible, precisamos da colection kubernetes.core:
+        ```
+        ansible-galaxy collection install kubernetes.core
+        ```
 
 ## Configuração
 
@@ -48,7 +55,13 @@ terraform apply
 
 Depois de confirmar a ação, o Terraform começará a criar os recursos na Oracle Cloud Infrastructure. Dependendo das especificações da sua infraestrutura, isso pode levar algum tempo.
 
+Com o provisionamento concluido voce pode comecar a implementacao do cluster K3S, para isso, use o seguinte comando:
 
+```
+ansible-playbook ansible/site.yaml -i ansible_inventory.ini
+```
+
+Depois da executacao voce tera o cluster instalado e configurado, atualmente o k3s esta sendo provisionado com o Longhorn como solucao de storage.
 
 ## Acesso ao Cluster
 
