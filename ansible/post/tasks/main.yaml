@@ -35,7 +35,7 @@
     api_version: storage.k8s.io/v1
     kind: StorageClass
     name: local-path
-    merge_type: 
+    merge_type:
       - merge
     definition:
       metadata:
@@ -48,14 +48,8 @@
     api_version: storage.k8s.io/v1
     kind: StorageClass
     name: longhorn
-  register: sc_result
-
-- name: Wait until longhorn StorageClass is created
-  command: sleep 10
   retries: 30
   delay: 10
-  until: sc_result.resources|length > 0
-  when: sc_result.resources|length == 0
 
 - name: Patch storageclass longhorn
   kubernetes.core.k8s:
@@ -63,10 +57,21 @@
     api_version: storage.k8s.io/v1
     kind: StorageClass
     name: longhorn
-    merge_type: 
+    merge_type:
       - merge
     definition:
       metadata:
         annotations:
           storageclass.kubernetes.io/is-default-class: "true"
-  when: sc_result.resources|length > 0
+
+- name: Force rollout for coredns
+  kubernetes.core.k8s:
+    kubeconfig: ../../kubeconfig
+    api_version: apps/v1
+    kind: Deployment
+    namespace: kube-system
+    name: coredns
+    definition:
+      metadata:
+        annotations:
+          kubectl.kubernetes.io/restartedAt: "{{ lookup('pipe', 'date --iso-8601=seconds') }}"
