@@ -3,8 +3,8 @@ resource "oci_core_vcn" "cluster_network" {
 
   cidr_blocks = var.cidr_blocks
 
-  display_name = "cluster-vcn"
-  dns_label    = "internal"
+  display_name = var.network_name
+  dns_label    = var.network_dns_label
 }
 
 resource "oci_core_default_security_list" "default_list" {

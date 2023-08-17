@@ -12,38 +12,38 @@ Para utilizar este repositório, você precisará de:
 - Instalação local do [Kubectl](https://kubernetes.io/docs/tasks/tools/).
 - Instalação local do [Helm](https://helm.sh/docs/intro/install/).
 - Instalação local do [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html).
-    - Alem do Ansible, precisamos da colection kubernetes.core:
-        ```
-        ansible-galaxy collection install kubernetes.core
-        ```
+  - Alem do Ansible, precisamos da colection kubernetes.core:
+    ```
+    ansible-galaxy collection install kubernetes.core
+    ```
 
 ## Configuração
 
 1. Clone este repositório para o seu computador local.
 
-    ```
-    git clone https://github.com/keinou/k8s-iac.git
-    ```
+   ```
+   git clone https://github.com/keinou/k8s-iac.git
+   ```
 
 2. Navegue para o diretório do repositório clonado.
 
-    ```
-    cd repo
-    ```
+   ```
+   cd repo
+   ```
 
 3. Copie o arquivo de exemplo `terraform.tfvars.example` para `terraform.tfvars` e preencha os valores necessários para sua configuração de infraestrutura.
 
-    ```
-    cp terraform.tfvars.example terraform.tfvars
-    ```
+   ```
+   cp terraform.tfvars.example terraform.tfvars
+   ```
 
-    Note que o arquivo `terraform.tfvars` deve ser preenchido com suas credenciais OCI e detalhes do recurso. Por favor, não compartilhe este arquivo, já que ele contém informações sensíveis.
+   Note que o arquivo `terraform.tfvars` deve ser preenchido com suas credenciais OCI e detalhes do recurso. Por favor, não compartilhe este arquivo, já que ele contém informações sensíveis.
 
 4. Inicialize o Terraform.
 
-    ```
-    terraform init
-    ```
+   ```
+   terraform init
+   ```
 
 ## Implementação
 

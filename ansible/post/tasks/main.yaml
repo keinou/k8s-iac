@@ -54,15 +54,9 @@
         annotations:
           storageclass.kubernetes.io/is-default-class: "false"
 
-- name: Check if longhorn StorageClass exists
-  kubernetes.core.k8s_info:
-    kubeconfig: ../../kubeconfig
-    api_version: storage.k8s.io/v1
-    kind: StorageClass
-    name: longhorn
-  retries: 30
-  delay: 10
-
+- name: Sleep for 30 seconds
+  ansible.builtin.wait_for:
+    timeout: 30
 - name: Patch storageclass longhorn
   kubernetes.core.k8s:
     kubeconfig: ../../kubeconfig
@@ -75,6 +69,8 @@
       metadata:
         annotations:
           storageclass.kubernetes.io/is-default-class: "true"
+  retries: 30
+  delay: 10
 
 - name: Install istio-base
   kubernetes.core.helm:

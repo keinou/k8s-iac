@@ -17,3 +17,12 @@ variable "ssh_managemnet_network" {
   description = "Subnet allowed to ssh to hosts"
   type        = string
 }
+
+variable "network_name" {
+  description = "Name of network"
+  type = string
+}
+
+variable "network_dns_label" {
+  type = string
+}

@@ -20,12 +20,15 @@ module "compartment" {
 
 }
 
-module "network" {
+module "vcn-cluster-01" {
   source = "./network"
   depends_on = [module.compartment]
   providers = {
     oci = oci
   }
+
+  network_name = "vcn-cluster-01"
+  network_dns_label = "internal"
 
   compartment_id = module.compartment.compartment_id
   tenancy_ocid   = var.tenancy_ocid
@@ -37,21 +40,21 @@ module "network" {
 module "master" {
   source     = "./compute"
   depends_on = [
-    module.network,
+    module.vcn-cluster-01,
     module.compartment
   ]
 
   server_name         = "k3s_server_0"
   compartment_id      = module.compartment.compartment_id
   tenancy_ocid        = var.tenancy_ocid
-  cluster_subnet_id   = module.network.cluster_subnet.id
+  cluster_subnet_id   = module.vcn-cluster-01.cluster_subnet.id
 
-  vm_ocpu        = 1
+  vm_ocpu        = 2
   vm_ram         = 3
   vm_private_ip  = cidrhost(var.cidr_blocks[0], 10)
   
-  permit_ssh_nsg_id   = module.network.permit_ssh.id
-  permit_kubeapi_nsg_id = module.network.permit_kubeapi.id
+  permit_ssh_nsg_id   = module.vcn-cluster-01.permit_ssh.id
+  permit_kubeapi_nsg_id = module.vcn-cluster-01.permit_kubeapi.id
   
   ssh_authorized_keys = [chomp(tls_private_key.ssh.public_key_openssh)]
 
@@ -60,21 +63,21 @@ module "master" {
 module "worker1" {
   source     = "./compute"
   depends_on = [
-    module.network,
+    module.vcn-cluster-01,
     module.compartment
   ]
 
   server_name         = "k3s_server_1"
   compartment_id      = module.compartment.compartment_id
   tenancy_ocid        = var.tenancy_ocid
-  cluster_subnet_id   = module.network.cluster_subnet.id
+  cluster_subnet_id   = module.vcn-cluster-01.cluster_subnet.id
 
-  vm_ocpu        = 1
+  vm_ocpu        = 2
   vm_ram         = 3
   vm_private_ip  = cidrhost(var.cidr_blocks[0], 11)
   
-  permit_ssh_nsg_id   = module.network.permit_ssh.id
-  permit_kubeapi_nsg_id = module.network.permit_kubeapi.id
+  permit_ssh_nsg_id   = module.vcn-cluster-01.permit_ssh.id
+  permit_kubeapi_nsg_id = module.vcn-cluster-01.permit_kubeapi.id
   
   ssh_authorized_keys = [chomp(tls_private_key.ssh.public_key_openssh)]
 

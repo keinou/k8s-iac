@@ -6,4 +6,4 @@
 **/*.tfstate*
 
 ansible_inventory.ini
-config
+kubeconfig

@@ -5,8 +5,8 @@ k3s_version=v1.27.4+k3s1
 ansible_user=ubuntu
 systemd_dir=/etc/systemd/system
 master_ip="{{ hostvars[groups['master'][0]]['ansible_host'] | default(groups['master'][0]) }}"
-extra_server_args="--tls-san {{ hostvars[groups['master'][0]]['ansible_host'] | default(groups['master'][0]) }} --disable=traefik"
-extra_agent_args=""
+extra_server_args="--tls-san {{ hostvars[groups['master'][0]]['ansible_host'] | default(groups['master'][0]) }} --disable=traefik --resolv-conf=/run/systemd/resolve/resolv.conf"
+extra_agent_args="--resolv-conf=/run/systemd/resolve/resolv.conf"
 ansible_ssh_private_key_file="terraform/oci.pem"
 ansible_user=ubuntu
 ansible_ssh_common_args='-o StrictHostKeyChecking=no'
