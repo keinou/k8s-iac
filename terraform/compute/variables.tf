@@ -13,14 +13,9 @@ variable "cluster_subnet_id" {
   type        = string
 }
 
-variable "permit_ssh_nsg_id" {
+variable "permit_nsg_id" {
   description = "NSG to permit SSH"
-  type        = string
-}
-
-variable "permit_kubeapi_nsg_id" {
-  description = "NSG to permit KubeAPI"
-  type        = string
+  type        = list(string)
 }
 
 variable "ssh_authorized_keys" {

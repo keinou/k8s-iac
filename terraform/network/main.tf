@@ -88,3 +88,43 @@ resource "oci_core_network_security_group_security_rule" "permit_kubeapi" {
   }
   direction = "INGRESS"
 }
+
+resource "oci_core_network_security_group" "permit_http" {
+  compartment_id = var.compartment_id
+  vcn_id         = oci_core_vcn.cluster_network.id
+  display_name   = "Permit HTTP"
+}
+
+resource "oci_core_network_security_group_security_rule" "permit_http" {
+  network_security_group_id = oci_core_network_security_group.permit_kubeapi.id
+  protocol                  = "6" // TCP
+  source                    = "0.0.0.0/0"
+  source_type               = "CIDR_BLOCK"
+  tcp_options {
+    destination_port_range {
+      max = 80
+      min = 80
+    }
+  }
+  direction = "INGRESS"
+}
+
+resource "oci_core_network_security_group" "permit_https" {
+  compartment_id = var.compartment_id
+  vcn_id         = oci_core_vcn.cluster_network.id
+  display_name   = "Permit HTTPS"
+}
+
+resource "oci_core_network_security_group_security_rule" "permit_https" {
+  network_security_group_id = oci_core_network_security_group.permit_kubeapi.id
+  protocol                  = "6" // TCP
+  source                    = "0.0.0.0/0"
+  source_type               = "CIDR_BLOCK"
+  tcp_options {
+    destination_port_range {
+      max = 443
+      min = 443
+    }
+  }
+  direction = "INGRESS"
+}

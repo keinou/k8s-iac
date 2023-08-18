@@ -53,8 +53,12 @@ module "master" {
   vm_ram         = 3
   vm_private_ip  = cidrhost(var.cidr_blocks[0], 10)
   
-  permit_ssh_nsg_id   = module.vcn-cluster-01.permit_ssh.id
-  permit_kubeapi_nsg_id = module.vcn-cluster-01.permit_kubeapi.id
+  permit_nsg_id   = [
+    module.vcn-cluster-01.permit_ssh.id,
+    module.vcn-cluster-01.permit_kubeapi.id,
+    module.vcn-cluster-01.permit_http.id,
+    module.vcn-cluster-01.permit_https.id
+  ]
   
   ssh_authorized_keys = [chomp(tls_private_key.ssh.public_key_openssh)]
 
@@ -76,8 +80,12 @@ module "worker1" {
   vm_ram         = 3
   vm_private_ip  = cidrhost(var.cidr_blocks[0], 11)
   
-  permit_ssh_nsg_id   = module.vcn-cluster-01.permit_ssh.id
-  permit_kubeapi_nsg_id = module.vcn-cluster-01.permit_kubeapi.id
+  permit_nsg_id   = [
+    module.vcn-cluster-01.permit_ssh.id,
+    module.vcn-cluster-01.permit_kubeapi.id,
+    module.vcn-cluster-01.permit_http.id,
+    module.vcn-cluster-01.permit_https.id
+  ]
   
   ssh_authorized_keys = [chomp(tls_private_key.ssh.public_key_openssh)]
 

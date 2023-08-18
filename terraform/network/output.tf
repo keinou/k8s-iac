@@ -19,6 +19,16 @@ output "permit_kubeapi" {
   value       = oci_core_network_security_group.permit_kubeapi
 }
 
+output "permit_http" {
+  description = "NSG to permit HTTP"
+  value       = oci_core_network_security_group.permit_http
+}
+
+output "permit_https" {
+  description = "NSG to permit HTTPS"
+  value       = oci_core_network_security_group.permit_https
+}
+
 output "ad" {
   value = data.oci_identity_availability_domain.ad.name
 }

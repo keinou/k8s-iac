@@ -14,10 +14,7 @@ resource "oci_core_instance" "_" {
   create_vnic_details {
     subnet_id  = var.cluster_subnet_id
     private_ip = var.vm_private_ip
-    nsg_ids    = [
-      var.permit_ssh_nsg_id,
-      var.permit_kubeapi_nsg_id
-    ]
+    nsg_ids    = var.permit_nsg_id
   }
   metadata = {
     "ssh_authorized_keys" = local.ampere_instance_config.metadata.ssh_authorized_keys
