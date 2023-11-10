@@ -2,6 +2,8 @@
 
 Este repositório tem como objetivo fornecer uma forma automatizada e fácil de configurar um cluster Kubernetes (k8s) usando o K3s no Free Tier da Oracle Cloud Infrastructure (OCI), usando Terraform, Ansible e Oracle Cloud CLI.
 
+*Este projeto ainda esta em desenvolvimento, mas já esta em um estado utilizavel, caso queira fique a vontade para contribuir e entrar em contato caso necessario!*
+
 ## Pré-requisitos
 
 Para utilizar este repositório, você precisará de:

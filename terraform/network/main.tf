@@ -56,9 +56,10 @@ resource "oci_core_network_security_group" "permit_ssh" {
 }
 
 resource "oci_core_network_security_group_security_rule" "permit_ssh" {
+  for_each = { for idx, ip in var.ssh_managemnet_network : idx => ip }
   network_security_group_id = oci_core_network_security_group.permit_ssh.id
   protocol                  = "6" // TCP
-  source                    = var.ssh_managemnet_network
+  source                    = each.value
   source_type               = "CIDR_BLOCK"
   tcp_options {
     destination_port_range {
@@ -96,7 +97,7 @@ resource "oci_core_network_security_group" "permit_http" {
 }
 
 resource "oci_core_network_security_group_security_rule" "permit_http" {
-  network_security_group_id = oci_core_network_security_group.permit_kubeapi.id
+  network_security_group_id = oci_core_network_security_group.permit_http.id
   protocol                  = "6" // TCP
   source                    = "0.0.0.0/0"
   source_type               = "CIDR_BLOCK"
@@ -116,7 +117,7 @@ resource "oci_core_network_security_group" "permit_https" {
 }
 
 resource "oci_core_network_security_group_security_rule" "permit_https" {
-  network_security_group_id = oci_core_network_security_group.permit_kubeapi.id
+  network_security_group_id = oci_core_network_security_group.permit_https.id
   protocol                  = "6" // TCP
   source                    = "0.0.0.0/0"
   source_type               = "CIDR_BLOCK"
@@ -124,6 +125,99 @@ resource "oci_core_network_security_group_security_rule" "permit_https" {
     destination_port_range {
       max = 443
       min = 443
+    }
+  }
+  direction = "INGRESS"
+}
+
+resource "oci_core_network_security_group" "permit_rdp" {
+  compartment_id = var.compartment_id
+  vcn_id         = oci_core_vcn.cluster_network.id
+  display_name   = "Permit XRDP"
+}
+
+resource "oci_core_network_security_group_security_rule" "permit_rdp" {
+  for_each = { for idx, ip in var.developers_ips : idx => ip }
+  network_security_group_id = oci_core_network_security_group.permit_rdp.id
+  protocol                  = "6" // TCP
+  source                    = each.value
+  source_type               = "CIDR_BLOCK"
+  tcp_options {
+    destination_port_range {
+      min = 3389
+      max = 3389
+    }
+  }
+  direction = "INGRESS"
+}
+
+resource "oci_core_network_security_group" "permit_developers" {
+  compartment_id = var.compartment_id
+  vcn_id         = oci_core_vcn.cluster_network.id
+  display_name   = "Permit Node Ports for Developers"
+}
+
+resource "oci_core_network_security_group_security_rule" "permit_developers" {
+  for_each = { for idx, ip in var.developers_ips : idx => ip }
+  network_security_group_id = oci_core_network_security_group.permit_developers.id
+  protocol                  = "6" // TCP
+  source                    = each.value
+  source_type               = "CIDR_BLOCK"
+  tcp_options {
+    destination_port_range {
+      min = 31432
+      max = 31434
+    }
+  }
+  direction = "INGRESS"
+}
+
+resource "oci_core_network_security_group" "permit_zomboid" {
+  compartment_id = var.compartment_id
+  vcn_id         = oci_core_vcn.cluster_network.id
+  display_name   = "Permit Project Zomboid Ports"
+}
+
+resource "oci_core_network_security_group_security_rule" "permit_zomboid" {
+  network_security_group_id = oci_core_network_security_group.permit_zomboid.id
+  protocol                  = "17" // TCP
+  source                    = "0.0.0.0/0"
+  source_type               = "CIDR_BLOCK"
+  
+  udp_options  {
+    destination_port_range {
+      min = 8766
+      max = 8766
+    }
+  }
+  direction = "INGRESS"
+}
+
+resource "oci_core_network_security_group_security_rule" "permit_zomboid2" {
+  network_security_group_id = oci_core_network_security_group.permit_zomboid.id
+  protocol                  = "17" // TCP
+  source                    = "0.0.0.0/0"
+  source_type               = "CIDR_BLOCK"
+  
+  udp_options  {
+    destination_port_range {
+      min = 16261
+      max = 16261
+    }
+  }
+  direction = "INGRESS"
+}
+
+resource "oci_core_network_security_group_security_rule" "permit_zomboid3" {
+  network_security_group_id = oci_core_network_security_group.permit_zomboid.id
+  protocol                  = "17" // TCP
+  source                    = "0.0.0.0/0"
+  source_type               = "CIDR_BLOCK"
+  
+  udp_options  {
+    destination_port_range {
+      min = 16262
+      max = 16262
     }
   }
   direction = "INGRESS"

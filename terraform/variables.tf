@@ -4,6 +4,33 @@ locals {
 
 variable "ssh_managemnet_network" {
   description = "Network can connect via SSH"
+  type        = list(string)
+}
+
+variable "k3s_version" {
+  description = "Version of K3S"
+  type        = string
+  default     = "v1.27.4+k3s1"
+}
+
+variable "cert_manager_version" {
+  description = "Version of Cert-Manager"
+  type        = string
+  default     = "v1.12.3"
+}
+
+variable "cloudflare_origin_ca_key" {
+  description = "Origin CA Key of API"
+  type        = string
+}
+
+variable "registry_username" {
+  description = "Your username for ghcr.io registry"
+  type        = string
+}
+
+variable "registry_password" {
+  description = "Your personal token for ghcr.io registry"
   type        = string
 }
 

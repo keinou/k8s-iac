@@ -29,6 +29,11 @@ output "permit_https" {
   value       = oci_core_network_security_group.permit_https
 }
 
+output "permit_developers" {
+  description = "Permit Node Ports for Developers"
+  value       = oci_core_network_security_group.permit_developers
+}
+
 output "ad" {
   value = data.oci_identity_availability_domain.ad.name
 }

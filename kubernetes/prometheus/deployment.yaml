@@ -21,6 +21,8 @@ spec:
           args:
             - "--config.file=/etc/prometheus/prometheus.yml"
             - "--storage.tsdb.path=/prometheus/"
+            - "--web.enable-lifecycle"
+            - "--web.external-url=https://prometheus.karc.io"
           ports:
             - containerPort: 9090
           volumeMounts:

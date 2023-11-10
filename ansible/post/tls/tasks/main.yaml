@@ -1,0 +1,65 @@
+---
+- name: Download and apply cert-manager
+  ansible.builtin.get_url:
+    url: "{{item.url}}"
+    dest: "{{role_path}}/../../../kubernetes/cert-manager/{{item.name}}"
+    mode: '0664'
+  loop:
+    - { name: 'cert-manager.crds.yaml', url: 'https://github.com/cert-manager/cert-manager/releases/download/{{cert_manager_version}}/cert-manager.crds.yaml'}
+    - { name: 'cert-manager.yaml', url: 'https://github.com/cert-manager/cert-manager/releases/download/{{cert_manager_version}}/cert-manager.yaml'}
+    - { name: 'crds.yaml', url: 'https://raw.githubusercontent.com/cloudflare/origin-ca-issuer/trunk/deploy/crds/cert-manager.k8s.cloudflare.com_originissuers.yaml'}
+    - { name: 'namespace.yaml', url: 'https://raw.githubusercontent.com/cloudflare/origin-ca-issuer/trunk/deploy/manifests/0-namespace.yaml'}
+    - { name: 'deployment.yaml', url: 'https://raw.githubusercontent.com/cloudflare/origin-ca-issuer/trunk/deploy/manifests/deployment.yaml'}
+    - { name: 'service-account.yaml', url: 'https://raw.githubusercontent.com/cloudflare/origin-ca-issuer/trunk/deploy/manifests/serviceaccount.yaml'}
+    - { name: 'role-approver.yaml', url: 'https://raw.githubusercontent.com/cloudflare/origin-ca-issuer/trunk/deploy/rbac/role-approver.yaml'}
+    - { name: 'role-binding.yaml', url: 'https://raw.githubusercontent.com/cloudflare/origin-ca-issuer/trunk/deploy/rbac/role-binding.yaml'}
+    - { name: 'role.yaml', url: 'https://raw.githubusercontent.com/cloudflare/origin-ca-issuer/trunk/deploy/rbac/role.yaml'}
+
+- name: Apply cert-manager
+  kubernetes.core.k8s:
+    state: present
+    src: "{{role_path}}/../../../kubernetes/cert-manager/{{item.name}}"
+  loop:
+    - { name: 'cert-manager.crds.yaml'}
+    - { name: 'cert-manager.yaml'}
+    - { name: 'crds.yaml' }
+    - { name: 'namespace.yaml' }
+    - { name: 'deployment.yaml' }
+    - { name: 'service-account.yaml' }
+    - { name: 'role-approver.yaml' }
+    - { name: 'role-binding.yaml' }
+    - { name: 'role.yaml' }
+
+- name: Create Issuer
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      api_version: cert-manager.io/v1
+      kind: Issuer
+      metadata:
+        name: letsencrypt-staging
+        namespace: registry
+      acme:
+        server: https://acme-staging-v02.api.letsencrypt.org/directory
+        email: rafael@karc.io
+        privateKeySecretRef:
+          name: account-key-staging
+        solvers:
+        - http01:
+          ingress:
+            class: kong
+
+- name: Clear
+  ansible.builtin.file:
+    path: "{{role_path}}/../../../kubernetes/cert-manager/{{item.name}}"
+    state: absent
+  loop:
+    - { name: 'cert-manager.crds.yaml'}
+    - { name: 'cert-manager.yaml'}
+    - { name: 'crds.yaml' }
+    - { name: 'namespace.yaml' }
+    - { name: 'deployment.yaml' }
+    - { name: 'service-account.yaml' }
+    - { name: 'role-approver.yaml' }
+    - { name: 'role-binding.yaml' }
+    - { name: 'role.yaml' }

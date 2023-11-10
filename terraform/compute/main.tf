@@ -6,6 +6,7 @@ resource "oci_core_instance" "_" {
   source_details {
     source_id   = local.ampere_instance_config.source_id
     source_type = local.ampere_instance_config.source_type
+    boot_volume_size_in_gbs = 100
   }
   shape_config {
     memory_in_gbs = local.ampere_instance_config.ram

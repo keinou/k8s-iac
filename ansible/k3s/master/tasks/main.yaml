@@ -1,5 +1,20 @@
 ---
+- name: Create directory for config file
+  file:
+    path: "{{item}}"
+    state: directory
+    mode: '0755'
+  become: true
+  loop:
+    - /etc/rancher/
+    - /etc/rancher/k3s/
 
+- name: Create registry config file
+  template:
+    src: registry_config_template.yaml.j2
+    dest: /etc/rancher/k3s/registries.yaml
+  become: true
+  
 - name: Copy K3s service file
   register: k3s_service
   template:

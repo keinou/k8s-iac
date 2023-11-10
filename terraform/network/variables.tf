@@ -15,7 +15,7 @@ variable "cidr_blocks" {
 
 variable "ssh_managemnet_network" {
   description = "Subnet allowed to ssh to hosts"
-  type        = string
+  type        = list(string)
 }
 
 variable "network_name" {
@@ -25,4 +25,8 @@ variable "network_name" {
 
 variable "network_dns_label" {
   type = string
+}
+
+variable "developers_ips" {
+  type = list(string)
 }

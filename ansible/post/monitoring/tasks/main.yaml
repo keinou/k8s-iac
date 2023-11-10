@@ -1,0 +1,38 @@
+---
+- name: Create monitoring namespace
+  kubernetes.core.k8s:
+    name: monitoring
+    kind: Namespace
+    state: present
+    kubeconfig: ../../../kubeconfig
+
+- name: Apply kube-state
+  kubernetes.core.k8s:
+    state: present
+    src: "{{role_path}}/../../../kubernetes/kube-state/{{item.name}}"
+  loop:
+    - { name: 'cluster-role-binding.yaml' }
+    - { name: 'cluster-role.yaml' }
+    - { name: 'deployment.yaml' }
+    - { name: 'service-account.yaml' }
+    - { name: 'service.yaml' }
+
+- name: Apply prometheus
+  kubernetes.core.k8s:
+    state: present
+    src: "{{role_path}}/../../../kubernetes/prometheus/{{item.name}}"
+  loop:
+    - { name: 'cluster-role.yaml' }
+    - { name: 'config-map.yaml' }
+    - { name: 'deployment.yaml' }
+    - { name: 'service.yaml' }
+
+- name: Apply grafana
+  kubernetes.core.k8s:
+    state: present
+    src: "{{role_path}}/../../../kubernetes/grafana/{{item.name}}"
+  loop:
+    - { name: 'deployment.yaml' }
+    - { name: 'ingress.yaml' }
+    - { name: 'pvc.yaml' }
+    - { name: 'service.yaml' }
